@@ -80,7 +80,13 @@ async function processCSV(filePath: string): Promise<OutputRow[]> {
 }
 
 function buildOmnivoreCSV(outputRows: OutputRow[]) {
-  fs.writeFile("omnivore_file.csv", outputRows.map(row => `"${row.url}","${row.state}","${row.labels}","${row.saved_at}","${row.published_at}"` ).join("\n"), (err) => {
+  const header = 'url,state,labels,saved_at,published_at';
+  const csvContent = outputRows.map(row =>
+    `"${row.url}","${row.state}","${row.labels}","${row.saved_at}","${row.published_at}"`
+  ).join("\n");
+
+
+  fs.writeFile("omnivore_file.csv", `${header}\n${csvContent}`, (err) => {
     if (err) {
       console.error('Error writing Omnivore CSV file', err);
     } else {
@@ -93,7 +99,14 @@ function buildOmnivoreCSV(outputRows: OutputRow[]) {
 if (process.argv.length > 1) {
   const filePath = process.argv[2];
   processCSV(filePath)
-    .then((outputRows) => buildOmnivoreCSV(outputRows))
+    .then((outputRows) => {
+      const rowsUniquesByURL = outputRows.filter((row, index, self) =>
+        index === self.findIndex((t) => (
+          t.url === row.url
+        ))
+      );
+      buildOmnivoreCSV(rowsUniquesByURL)
+    })
     .catch((err) => console.error(err));
 } else {
   console.error("Please provide a CSV file path.");
