@@ -128,3 +128,12 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# MacOS files
+.DS_Store
+
+# Output files from the build
+index.js
+
+# Input files
+*.csv
