@@ -79,20 +79,22 @@ async function processCSV(filePath: string): Promise<OutputRow[]> {
   });
 }
 
-// Example usage:
-if (process.argv.length > 2) {
+function buildOmnivoreCSV(outputRows: OutputRow[]) {
+  fs.writeFile("omnivore_file.csv", outputRows.map(row => `"${row.url}","${row.state}","${row.labels}","${row.saved_at}","${row.published_at}"` ).join("\n"), (err) => {
+    if (err) {
+      console.error('Error writing Omnivore CSV file', err);
+    } else {
+      console.log('Omnivore CSV file has been created.');
+    }
+  });
+}
+
+// Main
+if (process.argv.length > 1) {
   const filePath = process.argv[2];
   processCSV(filePath)
-    .then((outputRows) => {
-      outputRows.forEach((row) => {
-        console.log(
-          `"${row.url}","${row.state}","${row.labels}","${row.saved_at}","${row.published_at}"`
-        );
-      });
-    })
-    .catch((err) => {
-      console.error(err);
-    });
+    .then((outputRows) => buildOmnivoreCSV(outputRows))
+    .catch((err) => console.error(err));
 } else {
   console.error("Please provide a CSV file path.");
 }

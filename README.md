@@ -8,9 +8,9 @@ To use the tool first install dependencies:
 npm install
 ```
 
-Then run `start` passing your exported CSV file as the single parameter. The output will be printed to stdout. You can pipe this into a new file then upload to Omnivore.
+Then run `start` passing your exported CSV file as the single parameter. The output is written to `omnivore_file.csv` file.
 
 ```
-npm run start reader_file.csv > omnivore_file.csv
+npm run start reader_file.csv
 ```
 
